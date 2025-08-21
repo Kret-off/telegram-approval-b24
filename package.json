@@ -11,7 +11,8 @@
     "setup": "node scripts/setup-cloud.js",
     "test": "cd src/webapp && npm test",
     "lint": "cd src/webapp && npm run lint",
-    "postinstall": "cd src/webapp && npm install"
+    "postinstall": "cd src/webapp && npm install",
+    "vercel-build": "cd src/webapp && npm install"
   },
   "keywords": [
     "bitrix24",
