@@ -1,19 +1,50 @@
-# Переменные окружения для Vercel
-# Скопируйте эти переменные в настройки вашего проекта на Vercel
+# 🔧 Переменные окружения для Vercel
 
+## 🌐 Основные настройки
 NODE_ENV=production
-SESSION_SECRET=your_session_secret_change_this_in_vercel_dashboard
-
-# Bitrix24 (заполните своими данными)
-BITRIX24_CLIENT_ID=your_client_id
-BITRIX24_CLIENT_SECRET=your_client_secret
-BITRIX24_CALLBACK_URL=https://your-app.vercel.app/api/auth/bitrix24/callback
-
-# Telegram (заполните своими данными)
-TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_BOT_USERNAME=your_bot_username
-
-# Приложение
-BACKEND_URL=https://your-app.vercel.app
-ALLOWED_ORIGINS=https://your-app.vercel.app
+PORT=3000
+SESSION_SECRET=your_session_secret_here
 LOG_LEVEL=info
+
+## 🔐 Bitrix24 настройки
+BITRIX24_CLIENT_ID=your_bitrix24_client_id_here
+BITRIX24_CLIENT_SECRET=your_bitrix24_client_secret_here
+BITRIX24_DOMAIN=https://your-portal.bitrix24.ru
+
+## 🤖 Telegram Bot настройки
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
+TELEGRAM_WEBHOOK_SECRET=your_webhook_secret_here
+
+## 🔒 Безопасность
+ALLOWED_ORIGINS=https://telegram-approval-b2411.vercel.app,https://your-portal.bitrix24.ru
+
+## 📊 Мониторинг
+ENABLE_METRICS=true
+ENABLE_LOGGING=true
+
+## 🎯 Дополнительные настройки
+APP_NAME=Telegram Approval Cloud
+APP_VERSION=1.0.0
+APP_DESCRIPTION=Интеграция для согласования задач через Telegram
+
+## 📝 Инструкция по настройке:
+
+1. Откройте Vercel Dashboard
+2. Найдите проект telegram-approval-b2411
+3. Перейдите в Settings → Environment Variables
+4. Добавьте каждую переменную из списка выше
+5. Замените значения на ваши реальные данные
+
+## 🔑 Где взять значения:
+
+### Bitrix24:
+- BITRIX24_CLIENT_ID и BITRIX24_CLIENT_SECRET - из настроек приложения в Bitrix24
+- BITRIX24_DOMAIN - URL вашего портала Bitrix24
+
+### Telegram:
+- TELEGRAM_BOT_TOKEN - от @BotFather в Telegram
+- TELEGRAM_WEBHOOK_SECRET - придумайте сами (например, случайная строка)
+
+### Безопасность:
+- SESSION_SECRET - случайная строка для шифрования сессий
+- ALLOWED_ORIGINS - домены, которым разрешен доступ к API
