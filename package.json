@@ -1,35 +1,29 @@
 {
-  "name": "telegram-approval-b24",
+  "name": "telegram-approval-cloud",
   "version": "1.0.0",
-  "description": "Кастомное Activity для согласования через Telegram в бизнес-процессах Битрикс24",
-  "main": "src/backend/src/app.js",
+  "description": "Облачное решение для согласований через Telegram в Bitrix24",
+  "main": "src/webapp/server.js",
   "scripts": {
-    "start": "cd src/backend && npm start",
-    "build": "cd src/backend && npm install",
-    "dev": "cd src/backend && npm run dev",
-    "test": "cd src/backend && npm test",
-    "postinstall": "cd src/backend && npm install"
+    "start": "cd src/webapp && npm start",
+    "dev": "cd src/webapp && npm run dev",
+    "build": "cd src/webapp && npm run build",
+    "install:webapp": "cd src/webapp && npm install",
+    "setup": "node scripts/setup-cloud.js",
+    "test": "cd src/webapp && npm test",
+    "lint": "cd src/webapp && npm run lint"
   },
   "keywords": [
     "bitrix24",
     "telegram",
     "approval",
-    "business-process",
-    "activity",
-    "bot"
+    "cloud",
+    "rest-api",
+    "webhook"
   ],
-  "author": "Your Name <your.email@example.com>",
+  "author": "Your Name",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=16.0.0",
     "npm": ">=8.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/your-username/telegram-approval-b24.git"
-  },
-  "bugs": {
-    "url": "https://github.com/your-username/telegram-approval-b24/issues"
-  },
-  "homepage": "https://github.com/your-username/telegram-approval-b24#readme"
+  }
 }
