@@ -2,8 +2,8 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-// Стратегия авторизации Bitrix24
-const Bitrix24Strategy = require('passport-bitrix24').Strategy;
+// Наша собственная стратегия авторизации Bitrix24
+const Bitrix24Strategy = require('../strategies/bitrix24');
 
 // Настройка стратегии Bitrix24
 passport.use(new Bitrix24Strategy({

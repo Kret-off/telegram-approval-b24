@@ -10,7 +10,8 @@
     "install:webapp": "cd src/webapp && npm install",
     "setup": "node scripts/setup-cloud.js",
     "test": "cd src/webapp && npm test",
-    "lint": "cd src/webapp && npm run lint"
+    "lint": "cd src/webapp && npm run lint",
+    "postinstall": "cd src/webapp && npm install"
   },
   "keywords": [
     "bitrix24",
