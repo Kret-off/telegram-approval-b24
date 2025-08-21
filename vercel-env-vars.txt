@@ -1,0 +1,19 @@
+# Переменные окружения для Vercel
+# Скопируйте эти переменные в настройки вашего проекта на Vercel
+
+NODE_ENV=production
+SESSION_SECRET=your_session_secret_change_this_in_vercel_dashboard
+
+# Bitrix24 (заполните своими данными)
+BITRIX24_CLIENT_ID=your_client_id
+BITRIX24_CLIENT_SECRET=your_client_secret
+BITRIX24_CALLBACK_URL=https://your-app.vercel.app/api/auth/bitrix24/callback
+
+# Telegram (заполните своими данными)
+TELEGRAM_BOT_TOKEN=your_bot_token
+TELEGRAM_BOT_USERNAME=your_bot_username
+
+# Приложение
+BACKEND_URL=https://your-app.vercel.app
+ALLOWED_ORIGINS=https://your-app.vercel.app
+LOG_LEVEL=info
