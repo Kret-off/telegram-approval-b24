@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: telegram-approval-backend
+    env: node
+    plan: free
+    buildCommand: cd src/backend && npm install
+    startCommand: cd src/backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: BACKEND_URL
+        generateValue: true
+      - key: BACKEND_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: HMAC_SECRET
+        generateValue: true
+      - key: RATE_LIMIT_WINDOW
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: LOG_LEVEL
+        value: info

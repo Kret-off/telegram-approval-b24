@@ -1,0 +1,35 @@
+{
+  "name": "telegram-approval-b24",
+  "version": "1.0.0",
+  "description": "Кастомное Activity для согласования через Telegram в бизнес-процессах Битрикс24",
+  "main": "src/backend/src/app.js",
+  "scripts": {
+    "start": "cd src/backend && npm start",
+    "build": "cd src/backend && npm install",
+    "dev": "cd src/backend && npm run dev",
+    "test": "cd src/backend && npm test",
+    "postinstall": "cd src/backend && npm install"
+  },
+  "keywords": [
+    "bitrix24",
+    "telegram",
+    "approval",
+    "business-process",
+    "activity",
+    "bot"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/telegram-approval-b24.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/telegram-approval-b24/issues"
+  },
+  "homepage": "https://github.com/your-username/telegram-approval-b24#readme"
+}
