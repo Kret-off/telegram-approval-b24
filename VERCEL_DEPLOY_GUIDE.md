@@ -83,6 +83,55 @@ LOG_LEVEL=info
 2. **Дождитесь завершения сборки** (2-3 минуты)
 3. **Получите URL приложения** (например: `https://telegram-approval-cloud.vercel.app`)
 
+## ⚙️ Конфигурации Vercel
+
+### Вариант 1: Стандартная конфигурация (рекомендуется)
+Используется файл `vercel.json`:
+```json
+{
+  "version": 2,
+  "name": "telegram-approval-cloud",
+  "builds": [
+    {
+      "src": "src/webapp/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/webapp/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
+```
+
+### Вариант 2: Serverless функции
+Если нужны serverless функции, переименуйте `vercel-serverless.json` в `vercel.json`:
+```json
+{
+  "version": 2,
+  "name": "telegram-approval-cloud",
+  "functions": {
+    "src/webapp/server.js": {
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/webapp/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
+```
+
 ## 🔧 Настройка Bitrix24
 
 ### Создание приложения в Bitrix24

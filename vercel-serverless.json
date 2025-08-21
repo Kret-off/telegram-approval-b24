@@ -1,12 +1,11 @@
 {
   "version": 2,
   "name": "telegram-approval-cloud",
-  "builds": [
-    {
-      "src": "src/webapp/server.js",
-      "use": "@vercel/node"
+  "functions": {
+    "src/webapp/server.js": {
+      "maxDuration": 30
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
