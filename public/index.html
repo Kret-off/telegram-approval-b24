@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Approval Cloud</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .api-section {
+            margin: 30px 0;
+        }
+        .api-section h3 {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        .endpoint {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        .method {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .url {
+            color: #2196F3;
+        }
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+        }
+        .btn-warning {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+        }
+        .response {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Telegram Approval Cloud</h1>
+        
+        <div class="status">
+            <h2>📊 Статус системы</h2>
+            <p><strong>Сервер:</strong> <span id="server-status">Проверка...</span></p>
+            <p><strong>Время:</strong> <span id="current-time"></span></p>
+            <p><strong>Версия:</strong> <span id="version">1.0.0</span></p>
+            <p><strong>Платформа:</strong> <span id="platform">Определение...</span></p>
+        </div>
+
+        <div class="api-section">
+            <h3>🔗 API Endpoints</h3>
+            
+            <div class="endpoint">
+                <span class="method">GET</span> <span class="url">/health</span> - Проверка состояния сервера
+                <button class="btn" onclick="testEndpoint('/health')">Тест</button>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">GET</span> <span class="url">/api/auth/status</span> - Статус авторизации
+                <button class="btn" onclick="testEndpoint('/api/auth/status')">Тест</button>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">POST</span> <span class="url">/api/webhooks/test</span> - Тестовый webhook
+                <button class="btn btn-secondary" onclick="testWebhook()">Тест</button>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">GET</span> <span class="url">/api/admin/stats</span> - Статистика (требует авторизации)
+                <button class="btn btn-warning" onclick="testEndpoint('/api/admin/stats')">Тест</button>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h3>📝 Ответы API</h3>
+            <div id="api-response" class="response">Нажмите кнопку "Тест" для проверки endpoint</div>
+        </div>
+
+        <div class="api-section">
+            <h3>🔧 Следующие шаги</h3>
+            <ol>
+                <li>Настройте приложение в Bitrix24</li>
+                <li>Создайте Telegram Bot через @BotFather</li>
+                <li>Обновите конфигурацию в файле .env</li>
+                <li>Протестируйте полную интеграцию</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Обновление времени
+        function updateTime() {
+            document.getElementById('current-time').textContent = new Date().toLocaleString('ru-RU');
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Проверка статуса сервера
+        async function checkServerStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                document.getElementById('server-status').textContent = '✅ Работает';
+                document.getElementById('version').textContent = data.version;
+                document.getElementById('platform').textContent = data.platform || 'Неизвестно';
+            } catch (error) {
+                document.getElementById('server-status').textContent = '❌ Ошибка';
+                document.getElementById('platform').textContent = 'Ошибка подключения';
+            }
+        }
+        checkServerStatus();
+
+        // Тестирование endpoint
+        async function testEndpoint(endpoint) {
+            const responseDiv = document.getElementById('api-response');
+            responseDiv.textContent = 'Загрузка...';
+            
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseDiv.textContent = `Ошибка: ${error.message}`;
+            }
+        }
+
+        // Тестирование webhook
+        async function testWebhook() {
+            const responseDiv = document.getElementById('api-response');
+            responseDiv.textContent = 'Отправка webhook...';
+            
+            try {
+                const response = await fetch('/api/webhooks/test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        test: 'data',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseDiv.textContent = `Ошибка: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

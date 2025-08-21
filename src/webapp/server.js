@@ -19,6 +19,9 @@ const PORT = process.env.PORT || 3000;
 const serverDir = __dirname;
 const clientBuildPath = path.join(serverDir, 'client/build');
 
+// Проверяем, запущены ли мы на Vercel
+const isVercel = process.env.VERCEL === '1';
+
 // Middleware
 app.use(helmet());
 app.use(compression());
@@ -61,7 +64,8 @@ app.get('/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
     version: process.env.npm_package_version || '1.0.0',
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    platform: isVercel ? 'vercel' : 'local'
   });
 });
 
@@ -73,8 +77,10 @@ app.use('/api/approvals', require('./routes/approvals'));
 app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/admin', require('./routes/admin'));
 
-// Статические файлы
-app.use(express.static(clientBuildPath));
+// Статические файлы (только для локальной разработки)
+if (!isVercel) {
+  app.use(express.static(clientBuildPath));
+}
 
 // Serve React app (только для не-API маршрутов)
 app.get('*', (req, res) => {
@@ -86,7 +92,15 @@ app.get('*', (req, res) => {
     });
   }
   
-  // Проверяем существование файла index.html
+  // На Vercel статические файлы обрабатываются отдельно
+  if (isVercel) {
+    return res.status(404).json({
+      error: 'Страница не найдена',
+      message: 'На Vercel статические файлы должны обрабатываться через конфигурацию'
+    });
+  }
+  
+  // Проверяем существование файла index.html (только для локальной разработки)
   const indexPath = path.join(clientBuildPath, 'index.html');
   if (!fs.existsSync(indexPath)) {
     console.error('Файл index.html не найден:', indexPath);
@@ -111,14 +125,16 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`);
-  console.log(`📱 Веб-приложение доступно по адресу: http://localhost:${PORT}`);
-  console.log(`🔗 API доступен по адресу: http://localhost:${PORT}/api`);
-  console.log(`💚 Health check: http://localhost:${PORT}/health`);
-  console.log(`📁 Директория сервера: ${serverDir}`);
-  console.log(`📁 Путь к client/build: ${clientBuildPath}`);
-});
+// Start server (только для локальной разработки)
+if (!isVercel) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Сервер запущен на порту ${PORT}`);
+    console.log(`📱 Веб-приложение доступно по адресу: http://localhost:${PORT}`);
+    console.log(`🔗 API доступен по адресу: http://localhost:${PORT}/api`);
+    console.log(`💚 Health check: http://localhost:${PORT}/health`);
+    console.log(`📁 Директория сервера: ${serverDir}`);
+    console.log(`📁 Путь к client/build: ${clientBuildPath}`);
+  });
+}
 
 module.exports = app;
