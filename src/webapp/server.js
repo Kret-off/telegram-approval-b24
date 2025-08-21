@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const path = require('path');
+const fs = require('fs');
 const dotenv = require('dotenv');
 
 // Загружаем переменные окружения
@@ -50,18 +51,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Статические файлы
-app.use(express.static(path.join(__dirname, 'client/build')));
-
-// API Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/bitrix24', require('./routes/bitrix24'));
-app.use('/api/telegram', require('./routes/telegram'));
-app.use('/api/approvals', require('./routes/approvals'));
-app.use('/api/webhooks', require('./routes/webhooks'));
-app.use('/api/admin', require('./routes/admin'));
-
-// Health check
+// Health check (должен быть первым)
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -71,14 +61,44 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Serve React app
+// API Routes (должны быть перед статическими файлами)
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/bitrix24', require('./routes/bitrix24'));
+app.use('/api/telegram', require('./routes/telegram'));
+app.use('/api/approvals', require('./routes/approvals'));
+app.use('/api/webhooks', require('./routes/webhooks'));
+app.use('/api/admin', require('./routes/admin'));
+
+// Статические файлы
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+// Serve React app (только для не-API маршрутов)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  // Проверяем, что это не API маршрут
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({
+      error: 'API endpoint не найден',
+      message: `Маршрут ${req.path} не существует`
+    });
+  }
+  
+  // Проверяем существование файла index.html
+  const indexPath = path.join(__dirname, 'client/build', 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    console.error('Файл index.html не найден:', indexPath);
+    return res.status(500).json({
+      error: 'Файл приложения не найден',
+      message: 'Веб-интерфейс недоступен'
+    });
+  }
+  
+  // Отдаем React приложение для всех остальных маршрутов
+  res.sendFile(indexPath);
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Ошибка сервера:', err.stack);
   res.status(500).json({
     error: 'Что-то пошло не так!',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Внутренняя ошибка сервера'
