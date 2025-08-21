@@ -15,6 +15,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Определяем путь к директории сервера
+const serverDir = __dirname;
+const clientBuildPath = path.join(serverDir, 'client/build');
+
 // Middleware
 app.use(helmet());
 app.use(compression());
@@ -70,7 +74,7 @@ app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/admin', require('./routes/admin'));
 
 // Статические файлы
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(clientBuildPath));
 
 // Serve React app (только для не-API маршрутов)
 app.get('*', (req, res) => {
@@ -83,9 +87,11 @@ app.get('*', (req, res) => {
   }
   
   // Проверяем существование файла index.html
-  const indexPath = path.join(__dirname, 'client/build', 'index.html');
+  const indexPath = path.join(clientBuildPath, 'index.html');
   if (!fs.existsSync(indexPath)) {
     console.error('Файл index.html не найден:', indexPath);
+    console.error('Текущая директория сервера:', serverDir);
+    console.error('Путь к client/build:', clientBuildPath);
     return res.status(500).json({
       error: 'Файл приложения не найден',
       message: 'Веб-интерфейс недоступен'
@@ -111,6 +117,8 @@ app.listen(PORT, () => {
   console.log(`📱 Веб-приложение доступно по адресу: http://localhost:${PORT}`);
   console.log(`🔗 API доступен по адресу: http://localhost:${PORT}/api`);
   console.log(`💚 Health check: http://localhost:${PORT}/health`);
+  console.log(`📁 Директория сервера: ${serverDir}`);
+  console.log(`📁 Путь к client/build: ${clientBuildPath}`);
 });
 
 module.exports = app;
